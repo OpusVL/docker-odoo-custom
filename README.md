@@ -43,3 +43,15 @@ Setting the `DEV_ODOO` environment variable to a path, e.g. `/opt/odoo`, where y
 mounted a git clone of an Odoo source tree, will cause that path to be prepended to the
 PATH and the default addons path to point to it.
 
+# Old DB config environment variables still work
+
+EXPERIMENTAL
+
+The `DB*` environment variables we have in our existing docker-compose setups are, if set, copied to the new equivalents as of about 6 months ago.
+
+This is for backwards compatibility with existing environments that are configured using the `DB*` variables.  If they are set, then they will override the official ones - depending on internal feedback or feedback from you, the community, we may change the priorities so consider this particular bit experimental.
+
+
+# How it works
+
+There is a new entrypoint `opusvl-entrypoint.py` which augments environment variables and the command line with its own stuff depending on environment variables you set and what it finds in `/mnt/extra-addons-bundles`, then despatches to the upstream `entrypoint.sh`, re-using the logic contained therein.
