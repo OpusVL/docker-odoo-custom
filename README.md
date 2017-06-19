@@ -37,7 +37,7 @@ RUN chmod -R o+rX /mnt/extra-addons-bundles
 USER odoo
 ```
 
-# Developer Mode
+# Run Odoo from a git checkout
 
 Setting the `DEV_ODOO` environment variable to a path, e.g. `/opt/odoo`, where you have
 mounted a git clone of an Odoo source tree, will cause that path to be prepended to the
