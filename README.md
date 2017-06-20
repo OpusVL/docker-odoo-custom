@@ -4,6 +4,8 @@ An Odoo docker image with extended capabilities and fixes over the official one.
 Some of these are development aids, while some make a difference to how images
 are built for production.
 
+[![Docker Repository on Quay](https://quay.io/repository/opusvl/odoo-custom/status "Docker Repository on Quay")](https://quay.io/repository/opusvl/odoo-custom)
+
 # Locales
 
 Locales are generated for en_GB, and are set as default in the environment.
