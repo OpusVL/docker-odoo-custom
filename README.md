@@ -1,5 +1,8 @@
 # docker-odoo-custom
-An Odoo docker image with extended capabilities and fixes over the official one
+An Odoo docker image with extended capabilities and fixes over the official one.
+
+Some of these are development aids, while some make a difference to how images
+are built for production.
 
 # Locales
 
