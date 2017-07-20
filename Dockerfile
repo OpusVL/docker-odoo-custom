@@ -34,6 +34,7 @@ RUN mkdir /mnt/extra-addons-bundles && chmod -R o+rX /mnt/extra-addons-bundles
 
 # This custom entypoint augments the environment variables and the command line, and then despatches to the upstream /entrypoint.sh
 COPY opusvl-entrypoint.py /
+chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
 USER odoo
