@@ -47,6 +47,7 @@ def main():
         arglist += addons_path
     #
 
+    print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
 
