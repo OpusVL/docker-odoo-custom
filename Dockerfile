@@ -1,4 +1,4 @@
-FROM odoo:8.0
+FROM odoo:10.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
