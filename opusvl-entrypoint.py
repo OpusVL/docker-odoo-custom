@@ -6,6 +6,7 @@ import os
 from itertools import imap
 
 def main():
+    print >>sys.stderr, "Entered opusvl-entrypoint.py"
     convert_environment_variables()
 
     dev_odoo = os.environ.get('DEV_ODOO')
