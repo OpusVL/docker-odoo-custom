@@ -45,6 +45,7 @@ def main():
 
         addons_path = build_addons_path_arguments(candidate_addon_bundles)
         arglist += addons_path
+        arglist.append('--logfile=/dev/stderr')   # so that docker can see them
     #
 
     print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
