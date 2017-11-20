@@ -31,6 +31,7 @@ RUN mkdir /mnt/extra-addons-bundles && chmod -R o+rX /mnt/extra-addons-bundles
 # Put this in your bundle:
 # COPY addons-bundles/ /mnt/extra-addons-bundles/
 # RUN chmod -R o+rX /mnt/extra-addons-bundles
+COPY ./odoo.conf /etc/odoo/
 
 # This custom entypoint augments the environment variables and the command line, and then despatches to the upstream /entrypoint.sh
 COPY opusvl-entrypoint.py /
