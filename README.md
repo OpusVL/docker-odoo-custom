@@ -22,24 +22,18 @@ An `--addons-path` argument is automatically built on each startup to contain an
 
 So you can check out a set of modules directly into there (in a volume or copied in via a Dockerfile extending this one) and have Odoo pick them up, instead of having to flatten the tree yourself or manually build an addons_path in the config file.
 
-## Serving Suggestion
+## How to base your own image off this
 
 Create a git repo with the following structure:
 
-* a directory `addons-bundles` containing the repositories we are using modules from as git submodules (though sometimes customer-specific modules live in a plain subdirectory of this directory),
+* a directory `addons-bundles` containing the repositories we are using modules from as git submodules (though sometimes customer-specific modules live in a plain subdirectory of this directory).  Can be empty but must be there.  Use a .gitkeep file if necessary.
+* a `requirements.txt` listing extra modules to install via pip.  Can be empty but must be there.
 * a `Dockerfile`
 
 The Dockerfile might have something like this in it:
 
 ```
-FROM quay.io/opusvl/odoo-custom:8.0
-
-USER root
-
-COPY addons-bundles/ /mnt/extra-addons-bundles
-RUN chmod -R o+rX /mnt/extra-addons-bundles
-
-USER odoo
+FROM quay.io/opusvl/odoo-custom:10.0
 ```
 
 # Run Odoo from a git checkout

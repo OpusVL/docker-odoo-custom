@@ -28,9 +28,6 @@ ENV LC_ALL en_GB.UTF-8
 
 RUN mkdir /mnt/extra-addons-bundles && chmod -R 755 /mnt/extra-addons-bundles
 
-# Put this in your bundle:
-# COPY addons-bundles/ /mnt/extra-addons-bundles/
-# RUN chmod -R o+rX /mnt/extra-addons-bundles
 COPY ./odoo.conf /etc/odoo/
 
 # This custom entypoint augments the environment variables and the command line, and then despatches to the upstream /entrypoint.sh
@@ -39,3 +36,10 @@ RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
 USER odoo
+
+ONBUILD USER root
+ONBUILD COPY ./addon-bundles/ /mnt/extra-addon/bundles/
+ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
+ONBUILD COPY ./requirements.txt /root/
+ONBUILD RUN pip install -r /root/requirements.txt
+ONBUILD USER odoo
