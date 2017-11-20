@@ -26,7 +26,7 @@ ENV LANG en_GB.UTF-8
 ENV LANGUAGE en_GB:en
 ENV LC_ALL en_GB.UTF-8
 
-RUN mkdir /mnt/extra-addons-bundles && chmod -R o+rX /mnt/extra-addons-bundles
+RUN mkdir /mnt/extra-addons-bundles && chmod -R 755 /mnt/extra-addons-bundles
 
 # Put this in your bundle:
 # COPY addons-bundles/ /mnt/extra-addons-bundles/
