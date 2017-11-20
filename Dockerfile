@@ -38,7 +38,7 @@ ENTRYPOINT ["/opusvl-entrypoint.py"]
 USER odoo
 
 ONBUILD USER root
-ONBUILD COPY ./addon-bundles/ /mnt/extra-addon/bundles/
+ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 ONBUILD COPY ./requirements.txt /root/
 ONBUILD RUN pip install -r /root/requirements.txt
