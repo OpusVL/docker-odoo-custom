@@ -1,4 +1,4 @@
-FROM odoo:10.0
+FROM odoo:11.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
@@ -41,5 +41,5 @@ ONBUILD USER root
 ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 ONBUILD COPY ./requirements.txt /root/
-ONBUILD RUN pip install -r /root/requirements.txt
+ONBUILD RUN pip3 install -r /root/requirements.txt
 ONBUILD USER odoo
