@@ -103,7 +103,8 @@ def build_addons_path_arguments(paths):
     valid_paths = filter(is_valid_addon_bundle, paths)
     if valid_paths:
         conjoined_paths = ','.join(valid_paths)
-        return ['--addons-path='+conjoined_paths]
+        if conjoined_paths != '':
+            return ['--addons-path='+conjoined_paths]
     return []
 
 
