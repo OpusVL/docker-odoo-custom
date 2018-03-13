@@ -16,7 +16,7 @@ RUN apt-get update \
 
 
 # Install barcode font
-RUN curl http://www.reportlab.com/ftp/pfbfer.zip --output /tmp/pfbfer.zip \
+RUN curl -L http://www.reportlab.com/ftp/pfbfer.zip --output /tmp/pfbfer.zip \
         && mkdir -p /usr/lib/python2.7/dist-packages/reportlab/fonts \
         && unzip /tmp/pfbfer.zip -d /usr/lib/python2.7/dist-packages/reportlab/fonts/
 
