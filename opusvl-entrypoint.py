@@ -92,7 +92,7 @@ def is_valid_addon_bundle(path):
 def is_valid_addon(path):
     """Return whether the given path looks like an Odoo addon.
     """
-    valid_manifests = ['__init__.py', '__openerp__.py', '__terp__.py']
+    valid_manifests = ['__init__.py', '__openerp__.py', '__terp__.py', '__manifest__.py']
     return any(os.path.exists(os.path.join(path, m)) for m in valid_manifests)
 
 
