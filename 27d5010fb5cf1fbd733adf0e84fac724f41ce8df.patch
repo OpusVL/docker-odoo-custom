@@ -1,0 +1,80 @@
+From 27d5010fb5cf1fbd733adf0e84fac724f41ce8df Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Alexandre=20K=C3=BChn?= <aku@odoo.com>
+Date: Tue, 17 Apr 2018 17:10:05 +0200
+Subject: [PATCH] [FIX] web: correctly display filename when uploading a file
+
+Before this commit, when we upload a file in a form view with the widget
+binary file, the value of the input field is always the content of the file.
+
+The intended behaviour is to display the content of the file only if no
+filename is provided (*): when we save the record with a provided filename,
+the input text is correctly updated with the filename. If we upload another
+file, the input text will again show the content of the file until it is saved.
+
+This commit always show the filename of the binary field if it is provided,
+otherwise it falls back to the content of the file (same behaviour as before)
+
+Fixes #21630
+Closes #24275
+
+(*) This is how to provide a filename to a binary field:
+
+    - Suppose we have a binary field 'data' and a char field 'fdata'
+    - The xml node of 'data' is as follow: `<field name="data" filename="fdata"/>`
+    - the value of 'data' is 'Cg==1das02fa01'
+    - the value of 'fdata' is 'tmp.txt'
+    - The filename of the binary input will be 'tmp.txt', and its content is
+      'Cg==1das02fa01'
+---
+ addons/web/static/src/js/views/form_widgets.js | 29 +++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/addons/web/static/src/js/views/form_widgets.js b/addons/web/static/src/js/views/form_widgets.js
+index d528bc76340c2..cba016d3b2386 100644
+--- a/addons/web/static/src/js/views/form_widgets.js
++++ b/addons/web/static/src/js/views/form_widgets.js
+@@ -1203,9 +1203,34 @@ var FieldBinaryFile = FieldBinary.extend({
+             });
+         }
+     },
++    /**
++     * Render the value of the binary file field
++     *
++     * The value is its base64 representation, if no filename is provided.
++     * Otherwise, it uses the provided filename.
++     *
++     * This is how the filename is retrieved:
++     *
++     *   - Suppose that the binary field is named 'data'
++     *   - The xml node of this field is as follow:
++     *
++     *        `<field name='data' filename='fdata'/>`
++     *
++     *   - 'fdata' is another field whose value is the filename
++     *   - On the following record:
++     *
++     *          `{data: "Cg==1das02fa01", fdata: 'my-file.txt'}`
++     *
++     *   - The content of the file is the value of 'data': Cg==1das02fa01
++     *   - The filename is the value of 'fdata': my-file.txt
++     *
++     * /!\ DO NOT FORWARD-PORT
++     */
+     render_value: function() {
+-        var filename = this.view.datarecord[this.node.attrs.filename];
++        var filename;
+         if (this.get("effective_readonly")) {
++            // Filename from saved state (might render from a discard operation)
++            filename = this.view.datarecord[this.node.attrs.filename]; // DO NOT FORWARD-PORT
+             this.do_toggle(!!this.get('value'));
+             if (this.get('value')) {
+                 this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+@@ -1219,6 +1244,8 @@ var FieldBinaryFile = FieldBinary.extend({
+                 }
+             }
+         } else {
++            // Filename at the moment (might be unsaved state)
++            filename = this.field_manager.fields[this.node.attrs.filename].get('value'); // DO NOT FORWARD-PORT
+             if(this.get('value')) {
+                 this.$el.children().removeClass('o_hidden');
+                 this.$('.o_select_file_button').first().addClass('o_hidden');

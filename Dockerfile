@@ -63,6 +63,13 @@ COPY opusvl-entrypoint.py /
 RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
+# Patch O1644 (fixes rendering of binary files with filenames during edit mode)
+# [FIX] web: correctly display filename when uploading a file
+# Eventually this will start failing to apply, if and when Odoo release a docker image with the patch in
+COPY 27d5010fb5cf1fbd733adf0e84fac724f41ce8df.patch /root/
+RUN cd /usr/lib/python2.7/dist-packages/odoo ; \
+    patch -p1 < /root/27d5010fb5cf1fbd733adf0e84fac724f41ce8df.patch
+
 USER odoo
 
 ONBUILD USER root
