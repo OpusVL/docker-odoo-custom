@@ -35,15 +35,6 @@ COPY opusvl-entrypoint.py /
 RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
-# Patch Odoo so it can work with PostgreSQL 10
-# Eventually this will start failing to apply, if and when Odoo actually release a docker image with the patch in
-COPY 7a4c6eb35d0dd662d2bd992f4725413efbe31a97.patch /root/
-RUN set -ex ; \
-    apt-get update ; \
-    apt-get -y install patch ; \
-    cd /usr/lib/python2.7/dist-packages/odoo ; \
-    patch -p2 < /root/7a4c6eb35d0dd662d2bd992f4725413efbe31a97.patch
-
 USER odoo
 
 ONBUILD USER root
