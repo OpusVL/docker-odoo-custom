@@ -27,6 +27,10 @@ def main():
 
     arglist = sys.argv[1:]
 
+    # chown the mountpoint for filestore, sessions etc in the entrypoint
+    # as opposed to the Dockerfile, as they won't exist until instansiated by compose
+    os.system("chown -R odoo:odoo /var/lib/odoo/")
+
     # If we're actually going to run openerp, set up the args before we exec
     # it. Otherwise, exec ARGV as-is
     running_odoo = not arglist or (
@@ -54,7 +58,6 @@ def main():
         print >>sys.stderr, "Changing uid to odoo uid: %s" %odoo_uid
         os.setuid(odoo_uid)
 
-    os.system("chown -R odoo:odoo /var/lib/odoo/")
     print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
