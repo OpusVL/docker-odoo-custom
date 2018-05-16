@@ -29,11 +29,11 @@ def main():
 
     # If we're actually going to run openerp, set up the args before we exec
     # it. Otherwise, exec ARGV as-is
-    setup_config = not arglist or (
+    running_odoo = not arglist or (
         arglist[0] == 'openerp-server'
         or arglist[0].startswith('-')
     )
-    if setup_config:
+    if running_odoo:
         # Yes the config file env var is called OPENERP_SERVER.
         # Odoo looks at this environment variable so we're stuck with it.
 
@@ -49,9 +49,12 @@ def main():
         addons_path = build_addons_path_arguments(candidate_addon_bundles)
         arglist += addons_path
         arglist.append('--logfile=/dev/stderr')   # so that docker can see them
+        # Only set the uid to Odoo if we are in fact running Odoo
+        # and not a custom command with docker-compose run ...
+        print >>sys.stderr, "Changing uid to odoo uid: %s" %odoo_uid
+        os.setuid(odoo_uid)
+
     os.system("chown -R odoo:odoo /var/lib/odoo/")
-    print >>sys.stderr, "Changing uid to odoo uid: %s" %odoo_uid
-    os.setuid(odoo_uid)
     print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
