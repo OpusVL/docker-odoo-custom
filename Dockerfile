@@ -12,8 +12,18 @@ RUN apt-get update \
         unzip \
         locales-all \
         locales \
+        gnupg \
     && rm -rf /var/lib/apt/lists/*
 
+
+# Install postgresql 10.0 client
+ENV PG_MAJOR 10
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+RUN set -x; \
+        apt-get update \
+        && apt-get install -y --no-install-recommends \
+            postgresql-client-10
 
 # Install barcode font
 COPY pfbfer.zip /root/pfbfer.zip
