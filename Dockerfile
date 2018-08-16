@@ -1,6 +1,8 @@
 FROM odoo:11.0
 MAINTAINER OpusVL <community@opusvl.com>
 
+ENV PG_MAJOR 10
+
 USER root
 
 # Install some more fonts and locales
