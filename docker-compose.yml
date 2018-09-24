@@ -1,0 +1,24 @@
+version: "2.1"
+
+services:
+  odoo:
+    build: .
+    volumes:
+      - "${ODOO_VAR_VOLUME}:/var/lib/odoo"
+      - "./addon-bundles:/mnt/extra-addon-bundles"
+    depends_on:
+      - db
+    ports:
+      - "${ODOO_PORT}:8069"
+    environment:
+      USER: "${POSTGRES_USER}"
+      PASSWORD: "${POSTGRES_PASSWORD}"
+      HOST: db
+
+  db:
+    image: postgres:10.1
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - "${POSTGRES_VOLUME}:/var/lib/postgresql/data"
