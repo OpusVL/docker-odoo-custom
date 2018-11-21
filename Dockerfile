@@ -33,7 +33,7 @@ RUN set -ex; \
     rm -rf "$GNUPGHOME"; \
   apt-key list
 RUN set -ex; \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
             apt-get update ; \
 apt-get -y install "postgresql-client-$PG_MAJOR" postgresql-client-9.4-
 
