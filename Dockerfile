@@ -20,6 +20,7 @@ RUN apt-get update \
 # pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
 #       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
 # uid                  PostgreSQL Debian Repository
+ENV PG_MAJOR 10
 RUN set -ex; \
     key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
     export GNUPGHOME="$(mktemp -d)"; \
