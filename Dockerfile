@@ -66,4 +66,5 @@ ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 ONBUILD COPY ./requirements.txt /root/
 ONBUILD RUN pip install -r /root/requirements.txt
-
+# Remove compiler for security in production
+ONBUILD RUN apt-get -y autoremove gcc g++
