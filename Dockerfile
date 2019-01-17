@@ -35,8 +35,8 @@ RUN set -ex; \
         gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
         rm -rf "$GNUPGHOME" ; \
     } ; \
-    import_key_from_keyserver \
-  apt-key list
+    import_key_from_keyserver ; \
+    apt-key list
 RUN set -ex; \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
             apt-get update ; \
