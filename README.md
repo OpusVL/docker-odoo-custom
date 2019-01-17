@@ -63,6 +63,12 @@ This is for backwards compatibility with existing environments that are configur
 
 There is a new entrypoint `opusvl-entrypoint.py` which augments environment variables and the command line with its own stuff depending on environment variables you set and what it finds in `/mnt/extra-addons-bundles`, then despatches to the upstream `entrypoint.sh`, re-using the logic contained therein.
 
+# No promises about build breakage
+
+Sometimes to add features we will have to break the build of your derived containers.  Caveat emptor.
+
+* Upgrading to a version that uses a `build-hooks` directory will break your build
+  * A comment in Dockerfile explains how to remedy this in your repository
 
 # Copyright and License
 
