@@ -41,6 +41,10 @@ RUN set -ex; \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
             apt-get update ; \
 apt-get -y install "postgresql-client-$PG_MAJOR" postgresql-client-9.4-
+# So future apt-get update calls don't have to download the full Postgres
+# package list each time:
+RUN rm /etc/apt/sources.list.d/pgdg.list
+
 
 # Install barcode font
 COPY pfbfer.zip /root/pfbfer.zip
