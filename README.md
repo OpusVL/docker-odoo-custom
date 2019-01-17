@@ -65,7 +65,7 @@ There is a new entrypoint `opusvl-entrypoint.py` which augments environment vari
 
 # Copyright and License
 
-Copyright (C) 2017  Opus Vision Limited
+Copyright (C) 2019  Opus Vision Limited
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
