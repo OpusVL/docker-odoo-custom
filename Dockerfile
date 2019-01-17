@@ -3,7 +3,7 @@ MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
 
-# Install some more fonts and locales
+# Install some more fonts and locales, and common build requirements
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         fonts-dejavu \
@@ -14,6 +14,8 @@ RUN apt-get update \
         locales-all \
         locales \
         gnupg \
+        build-essential \
+        python2.7-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ### MAKE DATABASE MANAGER WORK WITH PostgreSQL 10 ###
