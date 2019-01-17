@@ -30,6 +30,7 @@ Create a git repo with the following structure:
 * a directory `build-hooks`
   * `build-hooks` must exist but may be empty.  Use a `build-hooks/.gitkeep` file to make sure it's checked into git. 
   * if you need to install packages before your `requirements.txt` is processed, include a bash script `build-hooks/pre-pip.sh`
+    * it is up to you to run `apt-get update` before `apt-get install -y`
     * it is called with `bash -e`, therefore:
       * it doesn't need to be executable or have a `#!` line
       * the first command that fails will stop the build
