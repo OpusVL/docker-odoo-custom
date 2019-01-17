@@ -74,10 +74,10 @@ ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 ONBUILD COPY ./build-hooks/ /root/build-hooks/
 ONBUILD COPY ./requirements.txt /root/
 ONBUILD RUN \
-    pre_pip_hook="/root/build-hooks/pre-pip.sh" \
-    if [ -f "$pre_pip_hook" ] \
+    pre_pip_hook="/root/build-hooks/pre-pip.sh" ; \
+    if [ -f "$pre_pip_hook" ] ; \
     then \
-        /bin/bash -x -e "$pre_pip_hook" \
+        /bin/bash -x -e "$pre_pip_hook" ; \
     fi
 ONBUILD RUN pip install -r /root/requirements.txt
 # Remove compiler for security in production
