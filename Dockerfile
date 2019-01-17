@@ -64,7 +64,21 @@ USER odoo
 ONBUILD USER root
 ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
+# If copy of build-hooks breaks your build:
+#  mkdir build-hooks
+#  touch build-hooks/.gitkeep
+#  git add build-hooks/.gitkeep
+# Introducing a directory for hooks means we can add more in
+# future and allow you to add your own helper scripts without
+# breaking the build again.
+ONBUILD COPY ./build-hooks/ /root/build-hooks/
 ONBUILD COPY ./requirements.txt /root/
+ONBUILD RUN \
+    pre_pip_hook="/root/build-hooks/pre-pip.sh"
+    if [ -f "$pre_pip_hook" ] \
+    then \
+        /bin/bash -x -e "$pre_pip_hook" \
+    fi
 ONBUILD RUN pip install -r /root/requirements.txt
 # Remove compiler for security in production
 ONBUILD RUN apt-get -y autoremove gcc g++
