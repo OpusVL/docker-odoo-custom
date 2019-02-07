@@ -1,4 +1,4 @@
-FROM odoo:11.0
+FROM odoo:12.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 ENV PG_MAJOR 10
@@ -18,25 +18,11 @@ RUN apt-get update \
         dirmngr \
     && rm -rf /var/lib/apt/lists/*
 
-
-### MAKE DATABASE MANAGER WORK WITH PostgreSQL 10 ###
-# pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
-#       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
-# uid                  PostgreSQL Debian Repository
+COPY odoo-pg-client-gpg-key.asc /
+RUN cat /odoo-pg-client-gpg-key.asc | apt-key add -
 RUN set -ex; \
-    key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    ( \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
-    || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
-    || gpg --keyserver keyserver.pgp.com --recv-keys "$key" \
-  ) ; \
-    gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
-    rm -rf "$GNUPGHOME"; \
-  apt-key list
-RUN set -ex; \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
-            apt-get update ; \
+   echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
+           apt-get update ; \
 apt-get -y install "postgresql-client-$PG_MAJOR" postgresql-client-9.4-
 
 # Install barcode font
