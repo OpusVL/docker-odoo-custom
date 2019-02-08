@@ -1,9 +1,8 @@
-FROM odoo:12.0
+FROM odoo:9.0
 MAINTAINER OpusVL <community@opusvl.com>
 
-ENV PG_MAJOR 10
-
 USER root
+ENV PG_MAJOR 10
 
 # Install some more fonts and locales
 RUN apt-get update \
@@ -14,21 +13,15 @@ RUN apt-get update \
         unzip \
         locales-all \
         locales \
-        gnupg \
-        dirmngr \
     && rm -rf /var/lib/apt/lists/*
+
 
 COPY odoo-pg-client-gpg-key.asc /
 RUN cat /odoo-pg-client-gpg-key.asc | apt-key add -
 RUN set -ex; \
-   echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
+   echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
            apt-get update ; \
 apt-get -y install "postgresql-client-$PG_MAJOR" postgresql-client-9.4-
-
-# Install barcode font
-COPY pfbfer.zip /root/pfbfer.zip
-RUN mkdir -p /usr/lib/python2.7/dist-packages/reportlab/fonts \
-        && unzip /root/pfbfer.zip -d /usr/lib/python2.7/dist-packages/reportlab/fonts/
 
 # Generate British locales, as this is who we mostly serve
 RUN locale-gen en_GB.UTF-8
@@ -36,9 +29,11 @@ ENV LANG en_GB.UTF-8
 ENV LANGUAGE en_GB:en
 ENV LC_ALL en_GB.UTF-8
 
-RUN mkdir /mnt/extra-addons-bundles && chmod -R 755 /mnt/extra-addons-bundles
+RUN mkdir /mnt/extra-addons-bundles && chmod -R o+rX /mnt/extra-addons-bundles
 
-COPY ./odoo.conf /etc/odoo/
+# Put this in your bundle:
+# COPY addons-bundles/ /mnt/extra-addons-bundles/
+# RUN chmod -R o+rX /mnt/extra-addons-bundles
 
 # This custom entypoint augments the environment variables and the command line, and then despatches to the upstream /entrypoint.sh
 COPY opusvl-entrypoint.py /
@@ -46,10 +41,3 @@ RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
 USER odoo
-
-ONBUILD USER root
-ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
-ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
-ONBUILD COPY ./requirements.txt /root/
-ONBUILD RUN pip3 install -r /root/requirements.txt
-ONBUILD USER odoo

@@ -1,11 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import glob
 import sys
 import os
+from itertools import imap
 
 def main():
-    print("Entered opusvl-entrypoint.py", file=sys.stderr)
+    print >>sys.stderr, "Entered opusvl-entrypoint.py"
     convert_environment_variables()
 
     dev_odoo = os.environ.get('DEV_ODOO')
@@ -13,7 +14,7 @@ def main():
         os.environ['PATH'] = ':'.join([ dev_odoo, os.environ['PATH'] ])
         base_addons = os.path.join(dev_odoo, 'addons')
     else:
-        base_addons = "/usr/lib/python3/dist-packages/openerp/addons"
+        base_addons = "/usr/lib/python2.7/dist-packages/openerp/addons"
     #
 
     candidate_addon_bundles = (
@@ -44,10 +45,9 @@ def main():
 
         addons_path = build_addons_path_arguments(candidate_addon_bundles)
         arglist += addons_path
-        arglist.append('--logfile=/dev/stderr')   # so that docker can see them
     #
 
-    print("/entrypoint.sh {}".format(arglist), file=sys.stderr)
+    print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
 
@@ -84,7 +84,7 @@ def is_valid_addon_bundle(path):
     if not os.path.isdir(path):
         return False
     candidate_addons = glob.glob(os.path.join(path, '*'))
-    return any(map(is_valid_addon, candidate_addons))
+    return any(imap(is_valid_addon, candidate_addons))
 
 
 
@@ -103,10 +103,10 @@ def build_addons_path_arguments(paths):
     valid_paths = filter(is_valid_addon_bundle, paths)
     if valid_paths:
         conjoined_paths = ','.join(valid_paths)
-        if conjoined_paths != '':
-            return ['--addons-path='+conjoined_paths]
+        return ['--addons-path='+conjoined_paths]
     return []
 
 
 if __name__ == "__main__":
     main()
+
