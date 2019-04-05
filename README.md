@@ -27,6 +27,14 @@ So you can check out a set of modules directly into there (in a volume or copied
 Create a git repo with the following structure:
 
 * a directory `addons-bundles` containing the repositories we are using modules from as git submodules (though sometimes customer-specific modules live in a plain subdirectory of this directory).  Can be empty but must be there.  Use a .gitkeep file if necessary.
+* a directory `build-hooks`
+  * `build-hooks` must exist but may be empty.  Use a `build-hooks/.gitkeep` file to make sure it's checked into git. 
+  * if you need to install packages before your `requirements.txt` is processed, include a bash script `build-hooks/pre-pip.sh`
+    * it is up to you to run `apt-get update` before `apt-get install -y`
+    * it is called with `bash -e`, therefore:
+      * it doesn't need to be executable or have a `#!` line
+      * the first command that fails will stop the build
+      * if you call your own scripts from the hook, make sure they exit with non-zero on failure  
 * a `requirements.txt` listing extra modules to install via pip.  Can be empty but must be there.
 * a `Dockerfile`
 
@@ -55,10 +63,16 @@ This is for backwards compatibility with existing environments that are configur
 
 There is a new entrypoint `opusvl-entrypoint.py` which augments environment variables and the command line with its own stuff depending on environment variables you set and what it finds in `/mnt/extra-addons-bundles`, then despatches to the upstream `entrypoint.sh`, re-using the logic contained therein.
 
+# No promises about build breakage
+
+Sometimes to add features we will have to break the build of your derived containers.  Caveat emptor.
+
+* Upgrading to a version that uses a `build-hooks` directory will break your build
+  * A comment in Dockerfile explains how to remedy this in your repository
 
 # Copyright and License
 
-Copyright (C) 2017  Opus Vision Limited
+Copyright (C) 2019  Opus Vision Limited
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by

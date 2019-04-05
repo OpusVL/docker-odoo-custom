@@ -3,7 +3,7 @@ MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
 
-# Install some more fonts and locales
+# Install some more fonts and locales, and common build requirements
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         fonts-dejavu \
@@ -14,6 +14,8 @@ RUN apt-get update \
         locales-all \
         locales \
         gnupg \
+        build-essential \
+        python2.7-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ### MAKE DATABASE MANAGER WORK WITH PostgreSQL 10 ###
@@ -36,6 +38,10 @@ RUN set -ex; \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
             apt-get update ; \
 apt-get -y install "postgresql-client-$PG_MAJOR" postgresql-client-9.4-
+# So future apt-get update calls don't have to download the full Postgres
+# package list each time:
+RUN rm /etc/apt/sources.list.d/pgdg.list
+
 
 # Install barcode font
 COPY pfbfer.zip /root/pfbfer.zip
@@ -62,6 +68,24 @@ USER odoo
 ONBUILD USER root
 ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
+# If copy of build-hooks breaks your build:
+#  mkdir build-hooks
+#  touch build-hooks/.gitkeep
+#  git add build-hooks/.gitkeep
+# Introducing a directory for hooks means we can add more in
+# future and allow you to add your own helper scripts without
+# breaking the build again.
+ONBUILD COPY ./build-hooks/ /root/build-hooks/
 ONBUILD COPY ./requirements.txt /root/
+ONBUILD RUN \
+    pre_pip_hook="/root/build-hooks/pre-pip.sh" ; \
+    if [ -f "$pre_pip_hook" ] ; \
+    then \
+        /bin/bash -x -e "$pre_pip_hook" \
+            # reduce size of layer - probably last time we'll install anything using apt anyway \
+            && rm -rf /var/lib/apt/lists/* \
+            ; \
+    fi
 ONBUILD RUN pip install -r /root/requirements.txt
-
+# Remove compiler for security in production
+ONBUILD RUN apt-get -y autoremove gcc g++
