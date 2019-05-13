@@ -1,4 +1,4 @@
-FROM odoo:8.0
+FROM quay.io/opusvl/odoo:8.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
