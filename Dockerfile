@@ -1,4 +1,4 @@
-FROM odoo:8.0
+FROM quay.io/opusvl/odoo:8.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
@@ -13,12 +13,6 @@ RUN apt-get update \
         locales-all \
         locales \
     && rm -rf /var/lib/apt/lists/*
-
-
-# Install barcode font
-RUN curl http://www.reportlab.com/ftp/pfbfer.zip --output /tmp/pfbfer.zip \
-        && mkdir -p /usr/lib/python2.7/dist-packages/reportlab/fonts \
-        && unzip /tmp/pfbfer.zip -d /usr/lib/python2.7/dist-packages/reportlab/fonts/
 
 # Generate British locales, as this is who we mostly serve
 RUN locale-gen en_GB.UTF-8
