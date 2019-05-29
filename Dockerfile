@@ -1,4 +1,4 @@
-FROM quay.io/opusvl/odoo:8.0
+FROM quay.io/opusvl/odoo:7.0
 MAINTAINER OpusVL <community@opusvl.com>
 
 USER root
@@ -31,4 +31,4 @@ COPY opusvl-entrypoint.py /
 RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
-USER odoo
+USER openerp
