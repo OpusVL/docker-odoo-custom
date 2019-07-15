@@ -22,9 +22,10 @@ ENV LC_ALL en_GB.UTF-8
 
 RUN mkdir /mnt/extra-addons-bundles && chmod -R o+rX /mnt/extra-addons-bundles
 
-# Put this in your bundle:
+# Put this in your Dockerfile when extending this one:
 # COPY addons-bundles/ /mnt/extra-addons-bundles/
-# RUN chmod -R o+rX /mnt/extra-addons-bundles
+# COPY addons/ /mnt/addons/
+# RUN chmod -R o+rX /mnt/extra-addons-bundles /mnt/addons
 
 # This custom entypoint augments the environment variables and the command line, and then despatches to the upstream /entrypoint.sh
 COPY opusvl-entrypoint.py /

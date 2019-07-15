@@ -18,8 +18,10 @@ def main():
     #
 
     candidate_addon_bundles = (
-        glob.glob("/mnt/extra-addons-bundles/*")
-        + ["/mnt/extra-addons", base_addons]
+        ["/mnt/addons/enabled"]
+        + glob.glob("/mnt/extra-addons-bundles/*")
+        + ["/mnt/extra-addons"]
+        + [base_addons]
     )
 
     arglist = sys.argv[1:]
