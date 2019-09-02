@@ -26,7 +26,9 @@ So you can check out a set of modules directly into there (in a volume or copied
 
 Create a git repo with the following structure:
 
+* a directory `addons` with a subdirectory `enabled` containing relative symlinks within the `addons` subtree to the actual addons.
 * a directory `addons-bundles` containing the repositories we are using modules from as git submodules (though sometimes customer-specific modules live in a plain subdirectory of this directory).  Can be empty but must be there.  Use a .gitkeep file if necessary.
+  * deprecated by the `/addons/enabled` mechanism documented below
 * a `requirements.txt` listing extra modules to install via pip.  Can be empty but must be there.
 * a `Dockerfile`
 
@@ -34,6 +36,40 @@ The Dockerfile might have something like this in it:
 
 ```
 FROM quay.io/opusvl/odoo-custom:10.0
+```
+
+## The new `/addons` layout
+
+The minimum is that it must exist and contain a directory within called `/addons/enabled`.
+
+e.g.
+
+```
+<yourcustomer>/
+  addons/
+    enabled/
+      .gitkeep
+```
+
+However we ensisage it being used more like this, with carefully-crafted symlinks in `enabled` in a similar vein to how Debian does its `sites-enabled` and `sites-available` structures.
+
+```
+<yourcustomer>/
+  addons/
+    enabled/
+      .gitkeep
+      <yourcustomer> -> ../custom/<yourcustomer>
+      web_sheet_full_width -> ../deps/OCA/web/web_sheet_full_width
+    custom/
+      <yourcustomer>/
+        __manifest.py__
+        ...
+    deps/
+      OCA/
+        web/    # perhaps included via a git submodule or other copying mechanism
+          web_sheet_full_width/
+            __manifest__.py
+            
 ```
 
 # Run Odoo from a git checkout

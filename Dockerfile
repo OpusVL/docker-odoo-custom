@@ -63,7 +63,8 @@ USER odoo
 
 ONBUILD USER root
 ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
-ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
+ONBUILD COPY ./addons/ /mnt/addons/
+ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles /mnt/addons
 ONBUILD COPY ./requirements.txt /root/
 ONBUILD RUN pip3 install -r /root/requirements.txt
 ONBUILD USER odoo
