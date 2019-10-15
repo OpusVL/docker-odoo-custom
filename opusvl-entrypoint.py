@@ -52,9 +52,9 @@ def main():
         arglist.append('--logfile=/dev/stderr')   # so that docker can see them
         # Only set the uid to Odoo if we are in fact running Odoo
         # and not a custom command with docker-compose run ...
-        print >>sys.stderr, "Changing uid to odoo uid: %s" %odoo_uid
+        sys.stderr.write("Changing uid to odoo uid: {}".format(odoo_uid))
         os.setuid(odoo_uid)
-    print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
+    sys.stderr.write("/entrypoint.sh {}".format(arglist))
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
 
