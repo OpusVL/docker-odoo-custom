@@ -27,7 +27,6 @@ def main():
     # chown the mountpoint for filestore, sessions etc in the entrypoint
     # as opposed to the Dockerfile, as they won't exist until instansiated by compose
     os.system("chown -R odoo:odoo /var/lib/odoo/")
-￼
 
     # If we're actually going to run openerp, set up the args before we exec
     # it. Otherwise, exec ARGV as-is
