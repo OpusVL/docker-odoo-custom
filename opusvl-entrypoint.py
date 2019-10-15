@@ -3,11 +3,12 @@
 import glob
 import sys
 import os
+import pwd
 
 def main():
     print("Entered opusvl-entrypoint.py", file=sys.stderr)
     convert_environment_variables()
-
+    odoo_uid = pwd.getpwnam('odoo').pw_uid
     dev_odoo = os.environ.get('DEV_ODOO')
     if dev_odoo is not None:
         os.environ['PATH'] = ':'.join([ dev_odoo, os.environ['PATH'] ])
@@ -23,13 +24,18 @@ def main():
 
     arglist = sys.argv[1:]
 
+    # chown the mountpoint for filestore, sessions etc in the entrypoint
+    # as opposed to the Dockerfile, as they won't exist until instansiated by compose
+    os.system("chown -R odoo:odoo /var/lib/odoo/")
+￼
+
     # If we're actually going to run openerp, set up the args before we exec
     # it. Otherwise, exec ARGV as-is
-    setup_config = not arglist or (
+    running_odoo = not arglist or (
         arglist[0] == 'openerp-server'
         or arglist[0].startswith('-')
     )
-    if setup_config:
+    if running_odoo:
         # Yes the config file env var is called OPENERP_SERVER.
         # Odoo looks at this environment variable so we're stuck with it.
 
@@ -45,9 +51,11 @@ def main():
         addons_path = build_addons_path_arguments(candidate_addon_bundles)
         arglist += addons_path
         arglist.append('--logfile=/dev/stderr')   # so that docker can see them
-    #
-
-    print("/entrypoint.sh {}".format(arglist), file=sys.stderr)
+        # Only set the uid to Odoo if we are in fact running Odoo
+        # and not a custom command with docker-compose run ...
+        print >>sys.stderr, "Changing uid to odoo uid: %s" %odoo_uid
+        os.setuid(odoo_uid)
+    print >>sys.stderr, "/entrypoint.sh {}".format(arglist)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
 
