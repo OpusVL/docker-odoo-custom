@@ -50,11 +50,9 @@ def main():
         addons_path = build_addons_path_arguments(candidate_addon_bundles)
         arglist += addons_path
         arglist.append('--logfile=/dev/stderr')   # so that docker can see them
-        # Only set the uid to Odoo if we are in fact running Odoo
-        # and not a custom command with docker-compose run ...
-        sys.stderr.write("Changing uid to odoo uid: {}".format(odoo_uid))
+        print("Changing uid to odoo uid: {}".format(odoo_uid), file=sys.stderr)
         os.setuid(odoo_uid)
-    sys.stderr.write("/entrypoint.sh {}".format(arglist))
+    print("/entrypoint.sh {}".format(arglist), file=sys.stderr)
     os.execl('/entrypoint.sh', '/entrypoint.sh', *arglist)
     return
 
