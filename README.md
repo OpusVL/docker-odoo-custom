@@ -36,6 +36,14 @@ The Dockerfile might have something like this in it:
 FROM quay.io/opusvl/odoo-custom:10.0
 ```
 
+# Running non-odoo commands
+This base image ends as user `root` and runs the `odoo` service as user `odoo` at runtime in the `entrypoint`.
+
+This means that when you `exec` into the container, the default user will be `root`. If you want to specifically exec as user `odoo`, you'll need to do the following:
+```bash
+docker-compose exec -u odoo odoo bash # I've just used bash as an example here but other commands can be used too
+```
+
 # Run Odoo from a git checkout
 
 Setting the `DEV_ODOO` environment variable to a path, e.g. `/opt/odoo`, where you have

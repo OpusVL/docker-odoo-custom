@@ -18,6 +18,8 @@ RUN apt-get update \
         dirmngr \
     && rm -rf /var/lib/apt/lists/*
 
+# Fix `invalid command 'bdist_wheel'` when the ONBUILD install requirements.txt is called
+RUN python3 -m pip install --upgrade pip
 
 ### MAKE DATABASE MANAGER WORK WITH PostgreSQL 10 ###
 # pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
@@ -59,11 +61,8 @@ COPY opusvl-entrypoint.py /
 RUN chmod a+rx /opusvl-entrypoint.py
 ENTRYPOINT ["/opusvl-entrypoint.py"]
 
-USER odoo
-
 ONBUILD USER root
 ONBUILD COPY ./addon-bundles/ /mnt/extra-addons-bundles/
 ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 ONBUILD COPY ./requirements.txt /root/
 ONBUILD RUN pip3 install -r /root/requirements.txt
-ONBUILD USER odoo
