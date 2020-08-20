@@ -18,6 +18,8 @@ RUN apt-get update \
         dirmngr \
     && rm -rf /var/lib/apt/lists/*
 
+# Fix `invalid command 'bdist_wheel'` when the ONBUILD install requirements.txt is called
+RUN python3 -m pip install --upgrade pip
 
 ### MAKE DATABASE MANAGER WORK WITH PostgreSQL 10 ###
 # pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
