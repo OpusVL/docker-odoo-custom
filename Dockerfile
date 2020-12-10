@@ -105,6 +105,7 @@ ONBUILD RUN chmod -R u=rwX,go=rX /mnt/extra-addons-bundles
 # breaking the build again.
 ONBUILD COPY ./build-hooks/ /root/build-hooks/
 ONBUILD COPY ./requirements.txt /root/
+ONBUILD COPY ./openerp-server.conf /etc/odoo/
 ONBUILD RUN \
     pre_pip_hook="/root/build-hooks/pre-pip.sh" ; \
     if [ -f "$pre_pip_hook" ] ; \
