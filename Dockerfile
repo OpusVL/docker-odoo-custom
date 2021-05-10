@@ -8,6 +8,7 @@ ENV LANG C.UTF-8
 RUN set -x; \
   apt-get update \
   && apt-get install -y --no-install-recommends \
+    apt-transport-https \
     ca-certificates \
     curl \
     node-less \
@@ -33,12 +34,8 @@ RUN set -x; \
 
 # install latest postgresql-client
 RUN set -x; \
-        echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' > etc/apt/sources.list.d/pgdg.list \
-        && export GNUPGHOME="$(mktemp -d)" \
-        && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
-        && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
-        && gpg --armor --export "${repokey}" | apt-key add - \
-        && rm -rf "$GNUPGHOME" \
+        curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+        && echo 'deb https://apt-archive.postgresql.org/pub/repos/apt/ jessie-pgdg main' > etc/apt/sources.list.d/pgdg.list \
         && apt-get update  \
         && apt-get install -y postgresql-client \
         && rm -rf /var/lib/apt/lists/*
